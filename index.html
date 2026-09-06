@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dasar Pemrograman — Angkatan 26</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230B0F17'/><path d='M20 25 L45 50 L20 75' stroke='%23FFD43B' stroke-width='11' fill='none' stroke-linecap='round' stroke-linejoin='round'/><rect x='55' y='66' width='28' height='10' rx='5' fill='%23FFD43B'/></svg>">
+<meta name="theme-color" content="#0B0F17">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -991,6 +993,52 @@ addEventListener('contextmenu',e=>{e.preventDefault();prev()});
 go(0);
 document.querySelectorAll('pre.code').forEach(p=>{p.innerHTML=p.innerHTML.replace(/^\s*<span>/,'').replace(/<\/span>\s*$/,'');const kw='def|return|if|elif|else|for|while|in|import|from|and|or|not|True|False|None|global|break|continue|print|type|int|str|float|bool|range|len|input|math|random|sqrt|randint|pi|shuffle|choice';
 p.innerHTML=p.textContent.replace(/[&<>]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch])).replace(new RegExp(`(#[^\\n]*)|((?:f|rb)?"[^"\\n]*"|'[^'\\n]*')|\\b(${kw})\\b|\\b(\\d+(?:\\.\\d+)?)\\b`,'g'),(m,cm,st,kk,nm)=>cm?`<span class="com">${cm}</span>`:st?`<span class="str">${st}</span>`:kk?`<span class="kw">${kk}</span>`:`<span class="num">${nm}</span>`)});
+
+/* ---------- TIMER — T = mulai/jeda · R = reset ---------- */
+const tv=document.createElement('div');tv.id='timer';document.body.appendChild(tv);
+let tsec=0,trun=false;
+setInterval(()=>{if(trun){tsec++;drawT()}},1000);
+function drawT(){
+ const sisa=TOTAL-tsec,fmt=s=>{s=Math.abs(s);return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+ tv.textContent='⏱ '+fmt(tsec)+' · sisa '+fmt(sisa);
+ tv.classList.toggle('jeda',!trun);
+ tv.classList.toggle('warn',trun&&sisa<10*60&&sisa>=0);
+ tv.classList.toggle('late',sisa<0);
+}
+
+/* ---------- OVERVIEW GRID — O = buka/tutup ---------- */
+const ov=document.createElement('div');ov.id='ov';document.body.appendChild(ov);
+const warna={'W1S1':'#FFD43B','W1S2':'#7EE787','W2S1':'#FF6B9D','W2S2':'#5EA0D8','W3S1':'#FFAB70','W3S2':'#C792EA'};
+S.forEach((s,i)=>{
+ const tag=s.querySelector('.tag'),ses=tag?tag.textContent.split('·')[0].trim():'';
+ const q=s.querySelector('.q'),h=s.querySelector('h1,h2'),pre=s.querySelector('pre');
+ let label=(q?q.textContent:(h?h.textContent:(pre?pre.textContent.trim().split('\n')[0]:''))).replace(/\s+/g,' ').trim();
+ if(label.length>72)label=label.slice(0,70)+'…';
+ const d=document.createElement('div');d.className='ovc';
+ if(warna[ses])d.style.setProperty('--c',warna[ses]);
+ d.innerHTML='<span class="n">'+(i+1)+'</span><span class="tg">'+(ses||'INTRO')+'</span><span class="lb"></span>';
+ d.querySelector('.lb').textContent=label||'—';
+ d.onclick=e=>{e.stopPropagation();toggleOv(false);go(i)};
+ ov.appendChild(d);
+});
+let ovOn=false;
+function toggleOv(v){
+ ovOn=(v===undefined)?!ovOn:v;
+ ov.classList.toggle('open',ovOn);
+ if(ovOn){[...ov.children].forEach((el,i)=>el.classList.toggle('cur',i===c));
+  ov.children[c].scrollIntoView({block:'center'});}
+}
+ov.addEventListener('click',e=>{if(!e.target.closest('.ovc'))e.stopPropagation()});
+
+/* ---------- Keyboard (capture = jalan sebelum listener lama) ---------- */
+addEventListener('keydown',e=>{
+ const k=e.key.toLowerCase();
+ if(k==='escape'&&ovOn){toggleOv(false);return}
+ if(k==='o'){toggleOv();e.preventDefault();return}
+ if(ovOn){e.stopPropagation();e.preventDefault();return}
+ if(k==='t'){trun=!trun;tv.style.display='block';drawT();return}
+ if(k==='r'){trun=false;tsec=0;drawT();return}
+},true);
 </script>
 </body>
 </html>
