@@ -987,6 +987,7 @@ else if(['ArrowLeft','ArrowUp','PageUp'].includes(k)){e.preventDefault();prev()}
 else if(k==='Home')go(0);else if(k==='End')go(S.length-1);
 else if(k.toLowerCase()==='f'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen()}});
 addEventListener('click',next);
+addEventListener('contextmenu',e=>{e.preventDefault();prev()});
 go(0);
 document.querySelectorAll('pre.code').forEach(p=>{p.innerHTML=p.innerHTML.replace(/^\s*<span>/,'').replace(/<\/span>\s*$/,'');const kw='def|return|if|elif|else|for|while|in|import|from|and|or|not|True|False|None|global|break|continue|print|type|int|str|float|bool|range|len|input|math|random|sqrt|randint|pi|shuffle|choice';
 p.innerHTML=p.textContent.replace(/[&<>]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch])).replace(new RegExp(`(#[^\\n]*)|((?:f|rb)?"[^"\\n]*"|'[^'\\n]*')|\\b(${kw})\\b|\\b(\\d+(?:\\.\\d+)?)\\b`,'g'),(m,cm,st,kk,nm)=>cm?`<span class="com">${cm}</span>`:st?`<span class="str">${st}</span>`:kk?`<span class="kw">${kk}</span>`:`<span class="num">${nm}</span>`)});
