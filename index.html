@@ -994,6 +994,29 @@ go(0);
 document.querySelectorAll('pre.code').forEach(p=>{p.innerHTML=p.innerHTML.replace(/^\s*<span>/,'').replace(/<\/span>\s*$/,'');const kw='def|return|if|elif|else|for|while|in|import|from|and|or|not|True|False|None|global|break|continue|print|type|int|str|float|bool|range|len|input|math|random|sqrt|randint|pi|shuffle|choice';
 p.innerHTML=p.textContent.replace(/[&<>]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[ch])).replace(new RegExp(`(#[^\\n]*)|((?:f|rb)?"[^"\\n]*"|'[^'\\n]*')|\\b(${kw})\\b|\\b(\\d+(?:\\.\\d+)?)\\b`,'g'),(m,cm,st,kk,nm)=>cm?`<span class="com">${cm}</span>`:st?`<span class="str">${st}</span>`:kk?`<span class="kw">${kk}</span>`:`<span class="num">${nm}</span>`)});
 
+/* ===== PATCH: Timer 90 menit + Overview Grid ===== */
+const TOTAL=90*60; // detik — ganti 90 kalau target waktunya beda
+
+const st=document.createElement('style');st.textContent=`
+#timer{position:fixed;top:14px;right:16px;z-index:30;background:#131A26;border:1px solid #202B3D;
+border-radius:99px;padding:.45em 1em;font-family:'JetBrains Mono',Consolas,monospace;
+font-size:clamp(.8rem,1.4vw,1.05rem);color:#E8ECF4;display:none;user-select:none;transition:opacity .2s}
+#timer.jeda{opacity:.45}
+#timer.warn{color:#FFD43B;border-color:#FFD43B55}
+#timer.late{color:#FF6B6B;border-color:#FF6B6B55}
+#ov{position:fixed;inset:0;z-index:25;background:rgba(7,10,16,.97);display:none;overflow-y:auto;
+padding:4vh 4vw 10vh;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;align-content:start}
+#ov.open{display:grid}
+.ovc{background:#131A26;border:1px solid #202B3D;border-left:5px solid var(--c,#202B3D);border-radius:10px;
+padding:.6rem .7rem;cursor:pointer;display:flex;flex-direction:column;gap:.25rem;transition:transform .15s,background .15s}
+.ovc:hover{background:#1C2637;transform:translateY(-2px)}
+.ovc.cur{outline:2px solid #FFD43B}
+.ovc .n{font-weight:800;color:#FFD43B;font-size:.95rem}
+.ovc .tg{font-size:.6rem;letter-spacing:.14em;color:#5EA0D8;font-weight:700;text-transform:uppercase;
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ovc .lb{font-size:.78rem;color:#C7CEDB;line-height:1.35;max-height:3.2em;overflow:hidden}`;
+document.head.appendChild(st);
+
 /* ---------- TIMER — T = mulai/jeda · R = reset ---------- */
 const tv=document.createElement('div');tv.id='timer';document.body.appendChild(tv);
 let tsec=0,trun=false;
