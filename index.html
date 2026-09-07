@@ -640,6 +640,20 @@ print(total)</pre>
 </section>
 
 <section class="slide">
+<span class="tag">W2S2 · Pembahasan Isian #1 — Trace</span>
+<h2>Ikuti komputernya, langkah demi langkah (num = 123)</h2>
+<table class="tbl pop">
+<tr><th>Putaran</th><th>num (cek &gt; 0)</th><th>digit = num % 10</th><th>total</th><th>num = num // 10</th></tr>
+<tr><td>1</td><td>123</td><td>3</td><td>3</td><td>12</td></tr>
+<tr><td>2</td><td>12</td><td>2</td><td>5</td><td>1</td></tr>
+<tr class="end"><td>3</td><td>1</td><td>1</td><td>6</td><td>0</td></tr>
+</table>
+<ul class="frag">
+<li><code>num</code> jadi 0 → <code>while num &gt; 0</code> gagal → loop berhenti → <b>return 6</b> ✔</li>
+</ul>
+</section>
+
+<section class="slide">
 <span class="tag">W2S2 · Recap</span>
 <h2>Yang wajib nempel di kepala</h2>
 <ul>
