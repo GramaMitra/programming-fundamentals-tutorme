@@ -135,7 +135,7 @@ code{font-family:'JetBrains Mono',monospace;background:#131A26;border-radius:8px
 <li><code>print()</code> = pengeras suara Python — tugasnya <b>menampilkan ke layar</b>.</li>
 <li>Variabel = <b>kotak berlabel</b>: <code>umur = 18</code> artinya "simpan 18 ke kotak umur".</li>
 <li><code>=</code> artinya <b>simpan</b>, bukan "sama dengan". Isi kotak boleh ditimpa.</li>
-<li>Nama kotak: mulai huruf, tanpa spasi. <code>umur_26</code> ✓ &nbsp; <code>2umur</code> ✗</li>
+<li>Aturan nama kotak: mulai huruf <b>atau underscore</b> (<code>_</code>), tanpa spasi, bukan <b>keyword</b> Python (<code>if</code>, <code>for</code>, <code>def</code>...). <code>umur_26</code> ✓ <code>_skor</code> ✓ <code>2umur</code> ✗ <code>if</code> ✗</li>
 </ul>
 </section>
 
@@ -169,9 +169,10 @@ code{font-family:'JetBrains Mono',monospace;background:#131A26;border-radius:8px
 <span class="tag">W1S1 · Pembahasan TF #2</span>
 <div class="verdict v-ok pop">BENAR ✔</div>
 <ul class="frag">
-<li>Di Python 3, <code>/</code> <b>selalu</b> menghasilkan float — meski hasilnya "bulat".</li>
-<li><code>10 / 2</code> → <b>5.0</b> · <code>10 / 4</code> → <b>2.5</b>.</li>
-<li>Mau hasil bulat? Pakai <code>//</code> (pembagian lantai): <code>10 // 2</code> → <b>5</b>.</li>
+<li>Di Python 3, <code>/</code> <b>selalu</b> menghasilkan float — meski hasilnya "bulat": <code>10 / 2</code> → <b>5.0</b>.</li>
+<li>Mau hasil bulat? Pakai <code>//</code> = <b>floor division</b> — dibulatkan <b>ke bawah</b>: <code>10 // 2</code> → 5, <code>10 // 3</code> → 3.</li>
+<li>Jebakan negatif: <code>-5 // 2</code> → <b>-3</b>, bukan -2! "Ke bawah" = turun di garis bilangan, bukan "buang angka di belakang koma".</li>
+<li>Ada float di hitungan? Hasilnya ikut float: <code>10.0 // 2</code> → <b>5.0</b>.</li>
 </ul>
 </section>
 
@@ -319,9 +320,10 @@ print("5" + "3")</pre>
 <span class="tag">W1S2 · Pembahasan PG #1</span>
 <div class="verdict v-y pop">Jawaban: D</div>
 <ul class="frag">
-<li>Outputnya <b>0.30000000000000004</b> — dan itu <b>bukan bug</b>!</li>
-<li>Komputer menyimpan desimal dalam <b>biner</b> → ada sisa pembulatan super kecil.</li>
-<li>Terjadi di hampir semua bahasa pemrograman — untuk perhitungan normal, anggap saja 0.3.</li>
+<li>Outputnya <b>0.30000000000000004</b> — dan itu <b>bukan bug</b>! Komputer nyimpen desimal dalam <b>biner</b> → ada sisa pembulatan super kecil.</li>
+<li>Kejadian di hampir semua bahasa. Buat keperluan normal: anggap aja 0.3, jangan panik.</li>
+<li>TAPI hati-hati: <code>0.1 + 0.2 == 0.3</code> menghasilkan <b>False!</b> Jadi bandingin float pakai toleransi — <code>math.isclose(a, b)</code>, bukan <code>==</code>.</li>
+<li>Dan <b>uang</b> jangan pakai float — pakai <code>decimal.Decimal</code>. Receh yang hilang gara-gara pembulatan biner gak boleh terjadi di dompet.</li>
 </ul>
 </section>
 
@@ -401,7 +403,7 @@ if user_age > 18
 <li>Setelah titik dua <code>:</code>, blok kode <b>wajib menjorok</b> (4 spasi).</li>
 <li>Yang menjorok = <b>milik if</b> · yang lurus = di luar if, jalan terus.</li>
 <li><code>=</code> menyimpan nilai · <code>==</code> membandingkan ("sama nggak?").</li>
-<li>Kondisi selalu menghasilkan <b>True atau False</b> — nggak ada tengah-tengah.</li>
+<li>Ekspresi perbandingan menghasilkan <b>True / False</b>. Tapi <code>if</code> juga bisa nerima nilai biasa: <code>if 1:</code> jalan (truthy) · <code>if 0:</code> skip (falsy).</li>
 </ul>
 </section>
 
@@ -606,7 +608,7 @@ print(total)</pre>
 <section class="slide">
 <span class="tag">W2S2 · Isian Program #1</span>
 <h2>Program Design — lengkapi kodenya</h2>
-<p class="prompt" style="margin-bottom:0">sum_of_digits(num) mengembalikan <b>jumlah digit</b> — contoh: 123 → 1+2+3 = <b>6</b>.</p>
+<p class="prompt" style="margin-bottom:0">sum_of_digits(num) mengembalikan <b>jumlah digit</b> — contoh: 123 → 1+2+3 = <b>6</b>. (num: bilangan bulat <b>positif</b>)</p>
 <pre><span class="kw">def</span> sum_of_digits(num):
     total = 0
     <span class="kw">while</span> num &gt; 0:
@@ -620,30 +622,20 @@ print(total)</pre>
 <section class="slide">
 <span class="tag">W2S2 · Pembahasan Isian #1</span>
 <h2 class="pop">Jawaban: <span class="big">% 10</span> dan <span class="big">// 10</span></h2>
-<pre><span class="kw">def</span> sum_of_digits(num):
+<pre class="sm"><span class="kw">def</span> sum_of_digits(num):
     total = 0
     <span class="kw">while</span> num &gt; 0:
-        digit = num <span class="y">% 10</span>      <span class="com"># sisa bagi 10 = digit terakhir</span>
+        digit = num <span class="y">% 10</span>      <span class="com"># sisa bagi 10</span>
         total += digit
         num = num <span class="y">// 10</span>       <span class="com"># buang digit terakhir</span>
     <span class="kw">return</span> total</pre>
 <ul class="frag">
-<li><code>num % 10</code> → sisa pembagian 10 = <b>digit terakhir</b>. 123 % 10 → 3.</li>
+<li><code>num % 10</code> → sisa bagi 10 = <b>digit terakhir</b>. 123 % 10 → 3.</li>
 <li><code>num // 10</code> → <b>buang digit terakhir</b>. 123 // 10 → 12.</li>
 </ul>
-</section>
-
-<section class="slide">
-<span class="tag">W2S2 · Pembahasan Isian #1 — Trace</span>
-<h2>Ikuti komputernya, langkah demi langkah (num = 123)</h2>
-<table class="tbl pop">
-<tr><th>Putaran</th><th>num (cek &gt; 0)</th><th>digit = num % 10</th><th>total</th><th>num = num // 10</th></tr>
-<tr><td>1</td><td>123</td><td>3</td><td>3</td><td>12</td></tr>
-<tr><td>2</td><td>12</td><td>2</td><td>5</td><td>1</td></tr>
-<tr class="end"><td>3</td><td>1</td><td>1</td><td>6</td><td>0</td></tr>
-</table>
-<ul class="frag">
-<li><code>num</code> jadi 0 → <code>while num &gt; 0</code> gagal → loop berhenti → <b>return 6</b> ✔</li>
+<ul class="frag" data-swap="hideprev">
+<li><code>num = 0</code> → <code>while</code> gagal langsung → return <b>0</b> — benar, jumlah digit 0 memang 0.</li>
+<li>Num negatif → juga 0, nggak bermakna. Kontraknya: <b>khusus bilangan positif</b> — atau tambah <code>num = abs(num)</code>.</li>
 </ul>
 </section>
 
@@ -976,7 +968,7 @@ print(x)</pre>
 </section>
 
 </main>
-<div id="hud"><span>← → navigasi · klik = lanjut · F = fullscreen</span><span id="num"></span></div>
+<div id="hud"><span>← → navigasi · klik = lanjut · klik kanan = mundur · F = fullscreen</span><span id="num"></span></div>
 <script>
 const S=[...document.querySelectorAll('.slide')];let c=0;
 const bar=document.getElementById('bar'),num=document.getElementById('num');
@@ -1052,6 +1044,22 @@ function toggleOv(v){
   ov.children[c].scrollIntoView({block:'center'});}
 }
 ov.addEventListener('click',e=>{if(!e.target.closest('.ovc'))e.stopPropagation()});
+
+/* ===== PATCH: Swap poin (poin lama hilang saat poin baru muncul) ===== */
+const st2=document.createElement('style');
+st2.textContent='ul.frag.gone{display:none}';
+document.head.appendChild(st2);
+document.querySelectorAll('ul[data-swap="hideprev"]').forEach(u2=>{
+ const u1=u2.previousElementSibling;if(!u1)return;
+ new MutationObserver(()=>u1.classList.toggle('gone',!!u2.querySelector('li.on')))
+  .observe(u2,{subtree:true,attributes:true,attributeFilter:['class']});
+});
+
+/* ===== PATCH: List swap kompak (item tersembunyi tidak reserve ruang) ===== */
+const st3=document.createElement('style');
+st3.textContent='ul[data-swap="hideprev"] li:not(.on){display:none}'
+ +'ul[data-swap="hideprev"] li.on{animation:pop .5s cubic-bezier(.2,.8,.25,1) both}';
+document.head.appendChild(st3);
 
 /* ---------- Keyboard (capture = jalan sebelum listener lama) ---------- */
 addEventListener('keydown',e=>{
